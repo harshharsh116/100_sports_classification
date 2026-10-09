@@ -23,26 +23,9 @@ def load_sports_model():
     with zipfile.ZipFile(zip_path, "r") as z:
         z.extractall(extract_dir)
 
-    keras_file = None
-    for root, dirs, files in os.walk(extract_dir):
-        for file in files:
-            if file.endswith(".keras") or file.endswith(".h5"):
-                keras_file = os.path.join(root, file)
-                break
-
-    if keras_file is None:
-        raise FileNotFoundError("No .keras or .h5 file found inside the zip!")
-
-    # --- ADD THE DEBUG LINES HERE, before load_model ---
-    st.write("Loading file:", keras_file)
-    st.write("File size:", os.path.getsize(keras_file), "bytes")
-    st.write("All files in extract_dir:")
-    for root, dirs, files in os.walk(extract_dir):
-        for file in files:
-            st.write(os.path.join(root, file))
-    # -----------------------------------------------------
-
-    model = tf.keras.models.load_model(keras_file)
+    # The extracted folder contains config.json + model.weights.h5 + metadata.json
+    # which together ARE the .keras model — load the folder directly
+    model = tf.keras.models.load_model(extract_dir)
     return model
 
 # ===== Model loading happens HERE, at the top level, before anything uses it =====
