@@ -21,34 +21,25 @@ def load_sports_model():
 
     extract_dir = "model_extracted"
     with zipfile.ZipFile(zip_path, "r") as z:
-        st.write("Files inside ZIP:", z.namelist())
         z.extractall(extract_dir)
 
-    # Show everything we actually extracted (files AND folders)
-    st.write("Everything extracted:")
-    found = []
-    for root, dirs, files in os.walk(extract_dir):
-        for d in dirs:
-            st.write("DIR: ", os.path.join(root, d))
-        for file in files:
-            path = os.path.join(root, file)
-            st.write("FILE:", path, f"({os.path.getsize(path)} bytes)")
-            found.append(path)
-
-    # Try to load whatever we found
     keras_file = None
-    for path in found:
-        if path.endswith(".keras") or path.endswith(".h5"):
-            keras_file = path
-            break
+    for root, dirs, files in os.walk(extract_dir):
+        for file in files:
+            if file.endswith(".keras") or file.endswith(".h5"):
+                keras_file = os.path.join(root, file)
+                break
 
     if keras_file is None:
-        st.error("No .keras or .h5 file found. Check the lists above to see what's actually inside.")
-        st.stop()
+        raise FileNotFoundError("No .keras or .h5 file found inside the zip!")
 
     model = tf.keras.models.load_model(keras_file)
     return model
 
+
+# ===== Model loading happens HERE, at the top level, before anything uses it =====
+model = load_sports_model()
+st.write("Model type:", type(model))
 
 st.title("Sports Classification")
 
