@@ -52,4 +52,4 @@ if uploaded_file is not None:
     predicted_index = np.argmax(predictions[0])
 
     predicted_sport = class_names[predicted_index]
-
+    st.success('Predicted Sport is : --',predicted_sport)
