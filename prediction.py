@@ -48,7 +48,7 @@ def load_sports_model():
 
     model = tf.keras.models.load_model(keras_file)
     return model
-st.write("Model type:", type(model))
+
 
 st.title("Sports Classification")
 
