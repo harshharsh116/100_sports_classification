@@ -32,7 +32,8 @@ def load_sports_model():
 
     if keras_file is None:
         raise FileNotFoundError("No .keras or .h5 file found inside the zip!")
-
+    st.write("Loading file:", keras_file)
+    st.write("File size:", os.path.getsize(keras_file), "bytes")
     model = tf.keras.models.load_model(keras_file)
     return model
 
