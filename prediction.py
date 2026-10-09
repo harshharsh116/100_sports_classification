@@ -32,11 +32,18 @@ def load_sports_model():
 
     if keras_file is None:
         raise FileNotFoundError("No .keras or .h5 file found inside the zip!")
+
+    # --- ADD THE DEBUG LINES HERE, before load_model ---
     st.write("Loading file:", keras_file)
     st.write("File size:", os.path.getsize(keras_file), "bytes")
+    st.write("All files in extract_dir:")
+    for root, dirs, files in os.walk(extract_dir):
+        for file in files:
+            st.write(os.path.join(root, file))
+    # -----------------------------------------------------
+
     model = tf.keras.models.load_model(keras_file)
     return model
-
 
 # ===== Model loading happens HERE, at the top level, before anything uses it =====
 model = load_sports_model()
