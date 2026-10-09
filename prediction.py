@@ -18,34 +18,13 @@ def load_sports_model():
         repo_type="model"
     )
 
-    extract_dir = os.path.join(
-        os.path.dirname(zip_path), "extracted_model"
-    )
-    os.makedirs(extract_dir, exist_ok=True)
+    with zipfile.ZipFile(zip_path, "r") as z:
+        files = z.namelist()
 
-    with zipfile.ZipFile(zip_path, "r") as zip_ref:
-        zip_ref.extractall(extract_dir)
+    st.write("Files inside ZIP:")
+    st.write(files)
 
-    model_path = None
-
-    for root, dirs, files in os.walk(extract_dir):
-        for file in files:
-            if file.endswith(".keras"):
-                model_path = os.path.join(root, file)
-                break
-        if model_path:
-            break
-
-    if model_path is None:
-        raise FileNotFoundError(
-            "No .keras file found inside the ZIP archive. "
-            "Check whether it contains another ZIP file."
-        )
-
-    return tf.keras.models.load_model(
-        model_path,
-        compile=False
-    )
+    return None
 
 model = load_sports_model()
 
